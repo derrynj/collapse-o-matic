@@ -29,24 +29,24 @@ class WP_Collapse_O_Matic {
 	 * Current version
 	 * @var string
 	 */
-	var $version = '1.8.5.8';
+	public $version = '1.8.5.9';
 
 	/**
 	 * Used as prefix for options entry
 	 * @var string
 	 */
-	var $domain = 'colomat';
+	public $domain = 'colomat';
 
 	/**
 	 * Name of the options
 	 * @var string
 	 */
-	var $options_name = 'WP_Collapse_O_Matic_options';
+	public $options_name = 'WP_Collapse_O_Matic_options';
 
 	/**
 	 * @var array
 	 */
-	var $options = array(
+	public $options = array(
 		'style' => 'light',
 		'cid' => '',
 		'tag' => 'span',
@@ -70,17 +70,17 @@ class WP_Collapse_O_Matic {
 		'touch_start' => '',
 	);
 
-	var $license_group = 'colomat_licenseing';
+	public $license_group = 'colomat_licenseing';
 
-    var $license_name = 'WP_Collapse_O_Matic_license';
+    public $license_name = 'WP_Collapse_O_Matic_license';
 
-    var $license_options = array(
+    public $license_options = array(
 		'collapse_commander_license_key' => '',
 		'collapse_commander_license_status' => ''
 	);
 
 	/**
-	 * PHP5 constructor
+	 * Constructor
 	 */
 	function __construct() {
 		// set option values
@@ -871,7 +871,7 @@ class WP_Collapse_O_Matic {
 		if ( !empty( $saved_options ) ) {
 			foreach ( $this->options AS $key => $option ) {
 				if($key == 'tabindex'){
-					$this->options[ $key ] = in_array( $key, $saved_options ) ? $saved_options[ $key ] : 0;
+					$this->options[ $key ] = array_key_exists( $key, $saved_options ) ? $saved_options[ $key ] : 0;
 				}
 				else{
 					$this->options[ $key ] = ( empty( $saved_options[ $key ] ) ) ? '' : $saved_options[ $key ];

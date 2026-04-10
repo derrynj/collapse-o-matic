@@ -1,11 +1,11 @@
 === Collapse-O-Matic ===
 
-Contributors: twinpictures, baden03
+Contributors: twinpictures, baden03, derrynj
 Donate link: https://pluginoven.com/panares-fund/
 Tags: collapse, expand, accordion, accordion
 Requires at least: 4.9
 Tested up to: 6.5.2
-Stable tag: 1.8.5.8
+Stable tag: 1.8.5.9
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -50,6 +50,11 @@ No. Not even close.
 3. Options Page? Yes, Options Page!
 
 == Changelog ==
+
+= 1.8.5.9 =
+* Updated for PHP 8.4 compatibility
+* Fixed bug in options loading for tabindex
+* Modernized code with public properties and updated constructor comments
 
 = 1.8.5.8 =
 * the id attribute is escaped to prevent any funny business
