@@ -16,12 +16,7 @@ License: GPL2
  * @category WordPress Plugins
  */
 
-if(!defined('PLUGIN_OVEN_URL')){
-	define( 'PLUGIN_OVEN_URL', 'https://pluginoven.com/' );
-}
-if(!defined('PLUGIN_OVEN_CC')){
-	define( 'PLUGIN_OVEN_CC', 'Collapse Commander' );
-}
+
 
 class WP_Collapse_O_Matic {
 
@@ -70,14 +65,7 @@ class WP_Collapse_O_Matic {
 		'touch_start' => '',
 	);
 
-	public $license_group = 'colomat_licenseing';
 
-    public $license_name = 'WP_Collapse_O_Matic_license';
-
-    public $license_options = array(
-		'collapse_commander_license_key' => '',
-		'collapse_commander_license_status' => ''
-	);
 
 	/**
 	 * Constructor
@@ -185,7 +173,6 @@ class WP_Collapse_O_Matic {
 	function admin_init() {
 		// register settings
 		register_setting( $this->domain, $this->options_name );
-		register_setting( $this->license_group, $this->license_name, array($this, 'edd_sanitize_license') );
 	}
 
 	/**
@@ -742,18 +729,7 @@ class WP_Collapse_O_Matic {
 										<br /><span class="description"><?php _e('Where should the script be loaded, in the Header or the Footer?', 'jquery-collapse-o-matic'); ?></span></label>
 									</td>
 								</tr>
-								<?php if( !is_plugin_active( 'collapse-commander/collapse-commander.php' ) ) : ?>
-								<tr>
-									<th><strong><?php _e( 'Take Command!', 'jquery-collapse-o-matic' ) ?></strong></th>
-									<td><?php printf(__( '%sCollapse Commander%s is an add-on plugin that introduces an advanced management interface to better organize expand elements and simplify expand shortcodes.', 'jquery-collapse-o-matic' ), '<a href="https://pluginoven.com/premium-plugins/collapse-commander/?utm_source=collapse-o-matic&utm_medium=plugin-settings-page&utm_content=collapse-commander&utm_campaign=collapse-o-matic-commander">', '</a>'); ?>
-									</td>
-								</tr>
-								<?php endif; ?>
-								<tr>
-									<th><strong><?php _e( 'Level Up!', 'jquery-collapse-o-matic' ) ?></strong></th>
-									<td><?php printf(__( '%sCollapse-Pro-Matic%s is our premium plugin that offers additional attributes and features for <i>ultimate</i> flexibility, in addition to a very %shigh level of personal support%s.', 'jquery-collapse-o-matic' ), '<a href="https://pluginoven.com/premium-plugins/collapse-pro-matic/?utm_source=collapse-o-matic&utm_medium=plugin-settings-page&utm_content=collapse-pro-matic&utm_campaign=collapse-o-matic-pro">', '</a>', '<a href="https://pluginoven.com/premium-plugins/collapse-pro-matic/testimonials/?utm_source=collapse-o-matic&utm_medium=plugin-settings-page&utm_content=collapse-pro-matic&utm_campaign=collapse-o-matic-support">', '</a>'); ?>
-									</td>
-								</tr>
+
 								</table>
 							</fieldset>
 
@@ -786,73 +762,7 @@ class WP_Collapse_O_Matic {
 			<div class="clear"></div>
 		</div>
 
-		<?php if( is_plugin_active( 'collapse-commander/collapse-commander.php' ) ) : ?>
 
-		<div class="postbox-container side metabox-holder" style="width:29%;">
-			<div style="margin:0 5px;">
-				<div class="postbox">
-					<h3 class="handle"><?php _e( 'Register Collapse Commander', 'jquery-collapse-o-matic') ?></h3>
-					<div class="inside">
-                                            <p><?php printf( __('To receive plugin updates you must register your plugin. Enter your Collapse Commander licence key below. Licence keys may be viewed and manged by logging into %syour account%s.', 'colpromat'), '<a href="https://pluginoven.com/my-account/" target="_blank">', '</a>'); ?></p>
-						<form method="post" action="options.php">
-                            <?php
-                                settings_fields( $this->license_group );
-                                $options = get_option($this->license_name);
-                                $cc_licence = ( !isset( $options['collapse_commander_license_key'] ) ) ? '' : $options['collapse_commander_license_key'];
-						    ?>
-							<fieldset>
-								<table style="width: 100%">
-									<tbody>
-										<tr>
-											<th><?php _e( 'License Key', 'colpromat' ) ?>:</th>
-											<td><label for="collapse_commander_license_key"><input type="text" id="collapse_commander_license_key" name="<?php echo esc_attr($this->license_name); ?>[collapse_commander_license_key]" value="<?php echo esc_attr( $cc_licence ); ?>" style="width: 100%" />
-												<br /><span class="description"><?php _e('Enter your license key', 'jquery-collapse-o-matic'); ?></span></label>
-											</td>
-
-										</tr>
-
-										<?php if( isset($options['collapse_commander_license_key']) ) { ?>
-										    <tr valign="top">
-											<th><?php _e('License Status', 'colpromat'); ?>:</th>
-											<td>
-											    <?php if( isset($options['collapse_commander_license_status']) && $options['collapse_commander_license_status'] == 'valid' ) { ?>
-												<span style="color:green;"><?php _e('active'); ?></span><br/>
-												<input type="submit" class="button-secondary" name="edd_cc_license_deactivate" value="<?php _e('Deactivate License', 'jquery-collapse-o-matic'); ?>"/>
-											    <?php } else {
-												    if( isset($options['collapse_commander_license_status']) ){ ?>
-													<span style="color: red"><?php echo esc_attr($options['collapse_commander_license_status']); ?></span><br/>
-												<?php } else { ?>
-													<span style="color: grey"><?php _e('inactive', 'jquery-collapse-o-matic'); ?></span><br/>
-												<?php } ?>
-												    <input type="submit" class="button-secondary" name="edd_cc_license_activate" value="<?php _e('Activate License', 'jquery-collapse-o-matic'); ?>"/>
-											    <?php } ?>
-											    </td>
-										    </tr>
-										<?php } ?>
-									</tbody>
-								</table>
-							</fieldset>
-							<?php submit_button( __( 'Register', 'jquery-collapse-o-matic') ); ?>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php else: ?>
-		<div class="postbox-container side metabox-holder meta-box-sortables" style="width:29%;">
-			<div style="margin:0 5px;">
-				<div class="postbox">
-					<div class="handlediv" title="<?php _e( 'Click to toggle', 'jquery-collapse-o-matic' ) ?>"><br/></div>
-					<h3 class="hndle">Collapse Commander</h3>
-						<div class="inside">
-							<p>A brief and not-exactly-sober overview of <a href="https://pluginoven.com/premium-plugins/collapse-commander/?utm_source=collapse-o-matic&utm_medium=plugin-settings-page&utm_content=collapse-commander&utm_campaign=collapse-o-matic-commander">Collapse Commander</a>, a new add-on plugin for Collapse-O-Matic and Collapse-Pro-Matic that adds and advanded expand shortcode management system.</p>
-							<iframe width="100%" height="300" src="//www.youtube.com/embed/w9X4nXpAEfo" frameborder="0" allowfullscreen></iframe>
-						</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<?php endif; ?>
 	<?php
 	}
 
@@ -880,57 +790,7 @@ class WP_Collapse_O_Matic {
 		}
 	}
 
-	function edd_sanitize_license( $new ) {
-            //collapse commander
-            $options = get_option($this->license_name);
-            $old_cc = ( !isset( $options['collapse_commander_license_key'] ) ) ? '' : $options['collapse_commander_license_key'];
-            $old_cc_status = ( !isset( $options['collapse_commander_license_status'] ) ) ? '' : $options['collapse_commander_license_status'];
 
-            if( !empty($old_cc) && $old_cc != $new['collapse_commander_license_key'] ) {
-                    $new['collapse_commander_license_status'] = '';
-            }
-            else{
-                $new['collapse_commander_license_status'] = $old_cc_status;
-            }
-
-            if( isset( $_POST['edd_cc_license_activate'] ) ) {
-                $new['collapse_commander_license_status'] = $this->plugin_oven_activate_license( urlencode( PLUGIN_OVEN_CC ), $new['collapse_commander_license_key'], 'activate_license');
-            }
-
-            if( isset( $_POST['edd_cc_license_deactivate'] ) ) {
-                $new['collapse_commander_license_status'] = $this->plugin_oven_activate_license( urlencode( PLUGIN_OVEN_CC ), $new['collapse_commander_license_key'], 'deactivate_license');
-            }
-            return $new;
-        }
-
-
-	/************************************
-	* this illustrates how to activate
-	* a license key
-	*************************************/
-
-	function plugin_oven_activate_license($plugin_name, $license_key, $edd_action) {
-            // data to send in our API request
-            $api_params = array(
-                    'edd_action'    => $edd_action,
-                    'license' 	    => $license_key,
-                    'item_name'     => $plugin_name,
-                    'url'           => home_url()
-            );
-
-            // Call the custom API.
-			$response = wp_remote_get( esc_url_raw( add_query_arg( $api_params, PLUGIN_OVEN_URL ) ), array( 'timeout' => 15, 'sslverify' => false ) );
-
-            // make sure the response came back okay
-            if ( is_wp_error( $response ) )
-                    return false;
-
-            // decode the license data
-            $license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-            // $license_data->license will be either "valid" or "invalid"
-            return $license_data->license;
-	}
 
 	/**
 	 * Filter $input to allow only tags from $allowed_tags array

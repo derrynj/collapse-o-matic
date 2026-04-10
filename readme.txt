@@ -55,6 +55,7 @@ No. Not even close.
 * Updated for PHP 8.4 compatibility
 * Fixed bug in options loading for tabindex
 * Modernized code with public properties and updated constructor comments
+* Removed licensing code and premium upsells to keep it fully open source
 
 = 1.8.5.8 =
 * the id attribute is escaped to prevent any funny business
