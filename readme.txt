@@ -4,7 +4,7 @@ Contributors: twinpictures, baden03, derrynj
 Donate link: https://pluginoven.com/panares-fund/
 Tags: collapse, expand, accordion, accordion
 Requires at least: 4.9
-Tested up to: 6.5.2
+Tested up to: 6.9
 Stable tag: 1.8.5.9
 Requires PHP: 7.2
 License: GPLv2 or later

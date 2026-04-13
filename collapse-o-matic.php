@@ -4,8 +4,8 @@ Plugin Name: Collapse-O-Matic
 Text Domain: jquery-collapse-o-matic
 Plugin URI: https://pluginoven.com/plugins/collapse-o-matic/
 Description: Collapse-O-Matic adds an [expand] shortcode that wraps content into a lovely, jQuery collapsible div.
-Version: 1.8.5.8
-Author: twinpictures, baden03
+Version: 1.8.5.9
+Author: twinpictures, baden03, derrynj
 Author URI: https://twinpictures.de/
 License: GPL2
 */
@@ -70,7 +70,7 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Constructor
 	 */
-	function __construct() {
+	public function __construct() {
 		// set option values
 		$this->_set_options();
 
@@ -100,7 +100,7 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Callback init
 	 */
-	function collapsTronicInit() {
+	public function collapsTronicInit() {
 		//collapse script
 		$load_in_footer = false;
 		if($this->options['script_location'] == 'footer' ){
@@ -115,7 +115,7 @@ class WP_Collapse_O_Matic {
 			'colomatpauseInit' => $this->options['pauseinit'],
 			'colomattouchstart' => $this->options['touch_start']
 		];
-		wp_add_inline_script( 'collapseomatic-js', 'const com_options = ' . json_encode( $com_options ), 'before' );
+		wp_add_inline_script( 'collapseomatic-js', 'var com_options = ' . json_encode( $com_options ), 'before' );
 
 		if( empty($this->options['script_check']) ){
 			wp_enqueue_script('collapseomatic-js');
@@ -136,7 +136,7 @@ class WP_Collapse_O_Matic {
 		}
 	}
 
-	function codemirror_enqueue_scripts($hook) {
+	public function codemirror_enqueue_scripts($hook) {
 		if($hook == 'settings_page_collapse-o-matic-options'){
 			wp_register_script('cm_js', plugins_url('js/admin_codemirror.js', __FILE__), array('jquery'), '0.1.0', true);
 			$cm_settings = wp_enqueue_code_editor(
@@ -160,7 +160,7 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Callback admin_menu
 	 */
-	function admin_menu() {
+	public function admin_menu() {
 		if ( function_exists( 'add_options_page' ) AND current_user_can( 'manage_options' ) ) {
 			// add options page
 			$page = add_options_page('Collapse-O-Matic Options', 'Collapse-O-Matic', 'manage_options', 'collapse-o-matic-options', array( $this, 'options_page' ));
@@ -170,7 +170,7 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Callback admin_init
 	 */
-	function admin_init() {
+	public function admin_init() {
 		// register settings
 		register_setting( $this->domain, $this->options_name );
 	}
@@ -178,7 +178,7 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Callback shortcode
 	 */
-	function shortcode($atts, $content = null){
+	public function shortcode($atts, $content = null){
 		$options = $this->options;
 		if( !empty($this->options['script_check']) ){
 			wp_enqueue_script('collapseomatic-js');
@@ -190,6 +190,14 @@ class WP_Collapse_O_Matic {
 				wp_enqueue_style( 'collapseomatic-css' );
 			}
 		}
+
+		//initialize variables to avoid PHP 8 warnings
+		$triggertext = '';
+		$highlander = '';
+		$sub_cids = array();
+		$trigtype = '';
+		$triggerimage = '';
+		$swapimage = '';
 
 		//find a random number, if no id is assigned
 		$ran = uniqid();
@@ -232,6 +240,9 @@ class WP_Collapse_O_Matic {
 			), $atts, 'expand'));
 
 		//collapse commander
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		if( !empty($cid) && is_plugin_active( 'collapse-commander/collapse-commander.php') ){
 			$meta_values = WP_CollapseCommander::meta_grabber($cid, $orderby, $order);
 			extract(shortcode_atts($meta_values, $atts));
@@ -478,7 +489,7 @@ class WP_Collapse_O_Matic {
 	}
 
 	// Add link to options page from plugin list
-	function plugin_actions($links) {
+	public function plugin_actions($links) {
 		$new_links = array();
 		$new_links[] = '<a href="options-general.php?page=collapse-o-matic-options">' . __('Settings', 'jquery-collapse-o-matic') . '</a>';
 		return array_merge($new_links, $links);
@@ -487,7 +498,10 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Admin options page
 	 */
-	function options_page() {
+	public function options_page() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		$like_it_arr = array(
 			__('really tied the room together', 'jquery-collapse-o-matic'),
 			__('made you feel all warm and fuzzy on the inside', 'jquery-collapse-o-matic'),
@@ -769,7 +783,7 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Set options from save values or defaults
 	 */
-	function _set_options() {
+	public function _set_options() {
 		// set options
 		$saved_options = get_option( $this->options_name );
 
@@ -795,9 +809,12 @@ class WP_Collapse_O_Matic {
 	/**
 	 * Filter $input to allow only tags from $allowed_tags array
 	 */
-	function filter_allowed_tags( $input, $allowed_tags ) {
+	public function filter_allowed_tags( $input, $allowed_tags ) {
+		if ( empty( $input ) || ! is_array( $allowed_tags ) ) {
+			return '';
+		}
 		$pattern = '/\A(' . implode( '|', $allowed_tags ) . ')\Z/';
-		if ( preg_match( $pattern, $input, $matches ) ) {
+		if ( preg_match( $pattern, (string) $input, $matches ) ) {
 			$output = $matches[0];
 		} else {
 			$output = '';
@@ -818,12 +835,15 @@ $WP_Collapse_O_Matic = new WP_Collapse_O_Matic;
 //https://www.wpexplorer.com/clean-up-wordpress-shortcode-formatting
 if (!function_exists('tp_clean_shortcodes')) {
 	function tp_clean_shortcodes($content){
+		if ( empty( $content ) ) {
+			return $content;
+		}
 		$array = array (
 		    '<p>[' => '[',
 		    ']</p>' => ']',
 		    ']<br />' => ']'
 		);
-		$content = strtr($content, $array);
+		$content = strtr( (string) $content, $array);
 		return $content;
 	}
 	add_filter('the_content', 'tp_clean_shortcodes');
